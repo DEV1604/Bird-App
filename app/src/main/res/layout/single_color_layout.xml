@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/color_head"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/rounded_textview">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/color_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:riv_mutate_background="true"
+            app:riv_oval="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/color_head_1"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/rounded_textview">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/color_holder_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/vector_feather"
+            app:riv_mutate_background="true"
+            app:riv_oval="true" />
+
+    </RelativeLayout>
+</RelativeLayout>
