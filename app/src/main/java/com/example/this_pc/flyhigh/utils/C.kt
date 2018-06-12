@@ -4,4 +4,5 @@ import android.graphics.Bitmap
 
 object C {
     lateinit var cameraBitmap: Bitmap
+    lateinit var img2cmp_URL : String
 }

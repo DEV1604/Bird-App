@@ -22,8 +22,10 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
 
     List<DetailFilters> details;
     Context context;
-    public FilterAdapter(List<DetailFilters> details){this.details=details;
-        Listdetails.detail=details;}
+    public FilterAdapter(List<DetailFilters> details){
+        this.details=details;
+        Listdetails.detail=details;
+    }
 
     @NonNull
     @Override

@@ -1,5 +1,6 @@
 package com.example.this_pc.flyhigh.Activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.this_pc.flyhigh.R;
 import com.example.this_pc.flyhigh.adapter.FilterAdapter;
 import com.example.this_pc.flyhigh.adapter.FilterImageAdapter;
@@ -19,6 +21,11 @@ import com.example.this_pc.flyhigh.pojo.Detail_imageFilter;
 import com.example.this_pc.flyhigh.pojo.FilterImageListp;
 import com.example.this_pc.flyhigh.pojo.FilterList;
 import com.example.this_pc.flyhigh.utils.C;
+import com.example.this_pc.flyhigh.utils.Message;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -29,12 +36,14 @@ import retrofit2.Response;
 public class FilterbirdActivity extends AppCompatActivity {
 
     ImageView img_to_be_compared;
+    ImageView bird_img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filterbird);
 
+        bird_img = (ImageView) findViewById(R.id.bird_img);
         img_to_be_compared = (ImageView) findViewById(R.id.img_to_be_compared);
 
         img_to_be_compared.setImageBitmap(C.cameraBitmap);
@@ -50,7 +59,7 @@ public class FilterbirdActivity extends AppCompatActivity {
                     List<DetailFilters> details = filters.getDetails();
 
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.filter_view);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(FilterbirdActivity.this,LinearLayoutManager.HORIZONTAL,false));
+                    recyclerView.setLayoutManager(new LinearLayoutManager(FilterbirdActivity.this, LinearLayoutManager.HORIZONTAL, false));
                     recyclerView.setAdapter(new FilterAdapter(details));
 
                 } else {
@@ -72,25 +81,47 @@ public class FilterbirdActivity extends AppCompatActivity {
         call_2.enqueue(new Callback<FilterImageListp>() {
             @Override
             public void onResponse(Call<FilterImageListp> call, Response<FilterImageListp> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     FilterImageListp filters = response.body();
                     List<Detail_imageFilter> details = filters.getDetails();
 
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.image_list_view);
-                    recyclerView.setLayoutManager(new GridLayoutManager(FilterbirdActivity.this,2,LinearLayoutManager.VERTICAL,false));
+                    recyclerView.setLayoutManager(new GridLayoutManager(FilterbirdActivity.this, 2, LinearLayoutManager.VERTICAL, false));
                     recyclerView.setAdapter(new FilterImageAdapter(details));
 
                 } else {
-                    Toast.makeText(FilterbirdActivity.this,"error in img part",Toast.LENGTH_LONG).show();
+                    Toast.makeText(FilterbirdActivity.this, "error in img part", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<FilterImageListp> call, Throwable t) {
-                Log.d("Error in image",t.getMessage());
-                Toast.makeText(FilterbirdActivity.this,"something isn't right in image part ",Toast.LENGTH_LONG).show();
+                Log.d("Error in image", t.getMessage());
+                Toast.makeText(FilterbirdActivity.this, "something isn't right in image part ", Toast.LENGTH_LONG).show();
             }
         });
+
         /*End of imageview filters*/
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Message m) {
+
+        Glide.with(this)
+                .load(m.getMessage())
+                .into(bird_img);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,10 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.this_pc.flyhigh.R;
 import com.example.this_pc.flyhigh.pojo.Detail_imageFilter;
+import com.example.this_pc.flyhigh.utils.C;
+import com.example.this_pc.flyhigh.utils.Message;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -32,10 +37,18 @@ public class FilterImageAdapter extends RecyclerView.Adapter<FilterImageAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FilterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final FilterViewHolder holder, final int position) {
         Glide.with(context)
                 .load(details.get(position).getImage())
                 .into(holder.filtered_img);
+        holder.filtered_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                C.img2cmp_URL=details.get(position).getImage().toString();
+                /*Log.d("Img2cmp_URL", toString().valueOf(C.img2cmp_URL));*/
+                EventBus.getDefault().post(new Message(details.get(position).getImage().toString()));
+            }
+        });
     }
 
     @Override
