@@ -1,12 +1,14 @@
 package com.example.this_pc.flyhigh.Activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -37,6 +39,7 @@ public class FilterbirdActivity extends AppCompatActivity {
 
     ImageView img_to_be_compared;
     ImageView bird_img;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +114,13 @@ public class FilterbirdActivity extends AppCompatActivity {
         Glide.with(this)
                 .load(m.getMessage())
                 .into(bird_img);
+        bird_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(FilterbirdActivity.this,BirdattributesActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
