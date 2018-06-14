@@ -17,6 +17,7 @@ import com.example.this_pc.flyhigh.interfaces.ApiInterface;
 import com.example.this_pc.flyhigh.pojo.Detail_imageFilter;
 import com.example.this_pc.flyhigh.pojo.FilterImageListp;
 import com.example.this_pc.flyhigh.utils.C;
+import com.example.this_pc.flyhigh.utils.Listdetails;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ import retrofit2.Response;
 public class BirdattributesActivity extends AppCompatActivity {
 
     ImageView final_img;
+    Detail_imageFilter details;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,30 +39,12 @@ public class BirdattributesActivity extends AppCompatActivity {
         Glide.with(BirdattributesActivity.this)
                 .load(C.img2cmp_URL)
                 .into(final_img);
-        ApiInterface service= ApiClient.getClient().create(ApiInterface.class);
-        Call<FilterImageListp> call = service.getImageFilter();
-        call.enqueue(new Callback<FilterImageListp>() {
-            @Override
-            public void onResponse(Call<FilterImageListp> call, Response<FilterImageListp> response) {
-                if (response.isSuccessful()){
-                    FilterImageListp attributes_fill = response.body();
-                    List<Detail_imageFilter> all_attributes = attributes_fill.getDetails();
 
-                    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.attributes_list);
-                    recyclerView.setLayoutManager(new GridLayoutManager(BirdattributesActivity.this,4, LinearLayoutManager.VERTICAL, false));
-                    recyclerView.setAdapter(new AttributesAdapter(all_attributes));
+        details= Listdetails.detail_imageFilter;
+        Log.d("keys values",details.toString());
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.attributes_list);
+        recyclerView.setLayoutManager(new GridLayoutManager(BirdattributesActivity.this,2,LinearLayoutManager.VERTICAL,false));
+        recyclerView.setAdapter(new AttributesAdapter(details));
 
-                }
-                else {
-                    Log.d("error in reponse",response.message());
-                    Toast.makeText(BirdattributesActivity.this, "error in retrieving a response on the 4th activity", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<FilterImageListp> call, Throwable t) {
-                Log.d("engue failure",t.getMessage());
-            }
-        });
     }
 }

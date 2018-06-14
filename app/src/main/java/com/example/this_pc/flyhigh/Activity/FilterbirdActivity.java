@@ -23,6 +23,7 @@ import com.example.this_pc.flyhigh.pojo.Detail_imageFilter;
 import com.example.this_pc.flyhigh.pojo.FilterImageListp;
 import com.example.this_pc.flyhigh.pojo.FilterList;
 import com.example.this_pc.flyhigh.utils.C;
+import com.example.this_pc.flyhigh.utils.Listdetails;
 import com.example.this_pc.flyhigh.utils.Message;
 
 import org.greenrobot.eventbus.EventBus;
@@ -87,7 +88,7 @@ public class FilterbirdActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     FilterImageListp filters = response.body();
                     List<Detail_imageFilter> details = filters.getDetails();
-
+                    Listdetails.detailAttributes=details;
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.image_list_view);
                     recyclerView.setLayoutManager(new GridLayoutManager(FilterbirdActivity.this, 2, LinearLayoutManager.VERTICAL, false));
                     recyclerView.setAdapter(new FilterImageAdapter(details));
@@ -114,6 +115,7 @@ public class FilterbirdActivity extends AppCompatActivity {
         Glide.with(this)
                 .load(m.getMessage())
                 .into(bird_img);
+
         bird_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

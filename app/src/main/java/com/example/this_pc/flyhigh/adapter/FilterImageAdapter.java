@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.example.this_pc.flyhigh.R;
 import com.example.this_pc.flyhigh.pojo.Detail_imageFilter;
 import com.example.this_pc.flyhigh.utils.C;
+import com.example.this_pc.flyhigh.utils.Listdetails;
 import com.example.this_pc.flyhigh.utils.Message;
 
 import org.greenrobot.eventbus.EventBus;
@@ -41,12 +42,13 @@ public class FilterImageAdapter extends RecyclerView.Adapter<FilterImageAdapter.
         Glide.with(context)
                 .load(details.get(position).getImage())
                 .into(holder.filtered_img);
+
         holder.filtered_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 C.img2cmp_URL=details.get(position).getImage().toString();
-                /*Log.d("Img2cmp_URL", toString().valueOf(C.img2cmp_URL));*/
-                EventBus.getDefault().post(new Message(details.get(position).getImage().toString()));
+                Listdetails.detail_imageFilter=details.get(position);
+                EventBus.getDefault().post(new Message(Listdetails.detail_imageFilter.getImage()));
             }
         });
     }
