@@ -2,30 +2,24 @@ package com.example.this_pc.flyhigh.Activity;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.ImageViewCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.example.this_pc.flyhigh.R;
+import com.example.this_pc.flyhigh.fragments.ModalBottomSheet;
 import com.example.this_pc.flyhigh.utils.C;
-import com.wonderkiln.camerakit.CameraKitEventCallback;
-import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraView;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
-import com.zhihu.matisse.engine.impl.PicassoEngine;
-import com.zhihu.matisse.filter.Filter;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,10 +28,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static int REQUEST_CODE_CHOOSE=1;
     List<Uri> mSelected;
-    ImageView get_img_gallery_btn;
-    FloatingActionButton get_img_camera_btn;
+    RelativeLayout get_img_gallery_btn, open_camera_btn;
+    /*FloatingActionButton get_img_camera_btn;*/
     CameraView cameraView;
     Bitmap bitmap;
     Intent intent;
@@ -45,40 +38,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        cameraView=(CameraView)findViewById(R.id.camera_view);
-        get_img_camera_btn=(FloatingActionButton)findViewById(R.id.get_img_camera_btn);
-        get_img_camera_btn.setOnClickListener(this);
-        get_img_gallery_btn=(ImageView)findViewById(R.id.get_img_gallery_btn);
+        /*cameraView=(CameraView)findViewById(R.id.camera_view);*/
+        open_camera_btn=(RelativeLayout)findViewById(R.id.open_camera_btn);
+        open_camera_btn.setOnClickListener(this);
+        get_img_gallery_btn=(RelativeLayout) findViewById(R.id.get_img_gallery_btn);
         get_img_gallery_btn.setOnClickListener(this);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        cameraView.start();
+        ModalBottomSheet modalBottomSheet = new ModalBottomSheet();
+        modalBottomSheet.show(getSupportFragmentManager(), "bottom sheet");
     }
-
-    @Override
-    protected void onPause() {
-        cameraView.stop();
-        super.onPause();
-    }
-
     @Override
     public void onClick(View v) {
         switch(v.getId()){
-            case R.id.get_img_camera_btn:
-                cameraView.captureImage(new CameraKitEventCallback<CameraKitImage>() {
-                    @Override
-                    public void callback(CameraKitImage cameraKitImage) {
-                        bitmap = cameraKitImage.getBitmap();
-                         intent = new Intent(MainActivity.this,FiltercolorActivity.class);
-                        C.cameraBitmap = bitmap;
-                        startActivity(intent);
-                    }
-
-                });
+            case R.id.open_camera_btn:
+                Intent cam_Intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                File file= getFile();
+                cam_Intent.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(file));
+                startActivityForResult(cam_Intent,1);
                 break;
+
             case R.id.get_img_gallery_btn:
                 Matisse.from(MainActivity.this)
                         .choose(MimeType.allOf())
@@ -87,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                         .thumbnailScale(0.85f)
                         .imageEngine(new GlideEngine())
-                        .forResult(REQUEST_CODE_CHOOSE);
+                        .forResult(2);
                 break;
 
             default:break;
@@ -97,7 +75,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
+        if (requestCode == 1 && requestCode == RESULT_OK){
+            String path = "sdcard/bird_app/cam_image.jpg";
+            Drawable d = Drawable.createFromPath(path);
+            Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+            intent = new Intent(MainActivity.this,FiltercolorActivity.class);
+            C.cameraBitmap = bitmap;
+            startActivity(intent);
+        }
+        else if (requestCode == 2 && resultCode == RESULT_OK) {
             mSelected = Matisse.obtainResult(data);
             Log.d("Matisse", "mSelected: " + mSelected);
             try {
@@ -111,4 +97,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private File getFile(){
+        File folder  = new File("sdcard/bird_app");
+        if (!folder.exists()){
+            folder.mkdir();
+        }
+        File image_file = new File(folder,"cam_image.jpg");
+        return null;
+    }
 }
