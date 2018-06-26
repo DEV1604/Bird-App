@@ -15,16 +15,15 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="10dp"
     app:layout_behavior="@string/bottom_sheet_behavior"
-    app:behavior_peekHeight="0dp"
-    >
+    app:behavior_peekHeight="0dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/open_camera_btn"
-        android:clickable="true">
+        >
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,8 +48,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/get_img_gallery_btn"
-        android:clickable="true">
+        android:id="@+id/get_img_gallery_btn">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

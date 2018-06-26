@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="10"
     tools:context=".Activity.MainActivity">
 
    <RelativeLayout
@@ -17,7 +15,9 @@
           android:layout_alignParentRight="true"
           android:layout_alignParentBottom="true"
           android:layout_margin="16dp"
+          android:id="@+id/fab_options"
           android:src="@drawable/vector_drawable_plus"/>
    </RelativeLayout>
+
    <include layout="@layout/bottom_sheet_modal"/>
 </android.support.design.widget.CoordinatorLayout>

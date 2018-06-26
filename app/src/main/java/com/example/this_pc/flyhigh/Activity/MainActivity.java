@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +17,6 @@ import android.widget.RelativeLayout;
 import com.example.this_pc.flyhigh.R;
 import com.example.this_pc.flyhigh.fragments.ModalBottomSheet;
 import com.example.this_pc.flyhigh.utils.C;
-import com.wonderkiln.camerakit.CameraView;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
@@ -28,33 +28,44 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    List<Uri> mSelected;
+    /*List<Uri> mSelected;*/
     RelativeLayout get_img_gallery_btn, open_camera_btn;
-    /*FloatingActionButton get_img_camera_btn;*/
-    CameraView cameraView;
-    Bitmap bitmap;
+    FloatingActionButton fab_options;
+    /*Bitmap bitmap;
     Intent intent;
+*/
+    ModalBottomSheet modalBottomSheet ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*cameraView=(CameraView)findViewById(R.id.camera_view);*/
-        open_camera_btn=(RelativeLayout)findViewById(R.id.open_camera_btn);
+
+        modalBottomSheet = new ModalBottomSheet();
+
+        fab_options = findViewById(R.id.fab_options);
+  /*      open_camera_btn = findViewById(R.id.open_camera_btn);
+        get_img_gallery_btn = findViewById(R.id.get_img_gallery_btn);
         open_camera_btn.setOnClickListener(this);
-        get_img_gallery_btn=(RelativeLayout) findViewById(R.id.get_img_gallery_btn);
         get_img_gallery_btn.setOnClickListener(this);
 
-        ModalBottomSheet modalBottomSheet = new ModalBottomSheet();
-        modalBottomSheet.show(getSupportFragmentManager(), "bottom sheet");
+*/
+        fab_options.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                modalBottomSheet.show(getSupportFragmentManager(), "bottom sheet");
+            }
+        });
     }
-    @Override
+
+    /*@Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.open_camera_btn:
                 Intent cam_Intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File file= getFile();
-                cam_Intent.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(file));
-                startActivityForResult(cam_Intent,1);
+                File file = getFile();
+                cam_Intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                startActivityForResult(cam_Intent, 1);
                 break;
 
             case R.id.get_img_gallery_btn:
@@ -68,41 +79,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .forResult(2);
                 break;
 
-            default:break;
+            default:
+                break;
         }
     }
-
-    @Override
+*/
+  /*  @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && requestCode == RESULT_OK){
+        if (requestCode == 1 && requestCode == RESULT_OK) {
             String path = "sdcard/bird_app/cam_image.jpg";
             Drawable d = Drawable.createFromPath(path);
-            Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
-            intent = new Intent(MainActivity.this,FiltercolorActivity.class);
+            bitmap = ((BitmapDrawable) d).getBitmap();
+            intent = new Intent(MainActivity.this, FiltercolorActivity.class);
             C.cameraBitmap = bitmap;
             startActivity(intent);
-        }
-        else if (requestCode == 2 && resultCode == RESULT_OK) {
+        } else if (requestCode == 2 && resultCode == RESULT_OK) {
             mSelected = Matisse.obtainResult(data);
             Log.d("Matisse", "mSelected: " + mSelected);
             try {
-                bitmap= MediaStore.Images.Media.getBitmap(this.getContentResolver(),Uri.parse(mSelected.get(0).toString()));
-                C.cameraBitmap=bitmap;
-                intent = new Intent(MainActivity.this,FiltercolorActivity.class);
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mSelected.get(0).toString()));
+                C.cameraBitmap = bitmap;
+                intent = new Intent(MainActivity.this, FiltercolorActivity.class);
                 startActivity(intent);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
-    private File getFile(){
-        File folder  = new File("sdcard/bird_app");
-        if (!folder.exists()){
+*/
+   /* private File getFile() {
+        File folder = new File("sdcard/bird_app");
+        if (!folder.exists()) {
             folder.mkdir();
         }
-        File image_file = new File(folder,"cam_image.jpg");
-        return null;
-    }
+        File image_file = new File(folder, "cam_image.jpg");
+        return image_file;
+    }*/
 }
