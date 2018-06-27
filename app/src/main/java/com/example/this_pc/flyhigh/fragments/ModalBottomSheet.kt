@@ -1,12 +1,8 @@
 package com.example.this_pc.flyhigh.fragments
 
-import android.app.Activity.RESULT_OK
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,15 +12,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import android.widget.Toast
-import com.example.this_pc.flyhigh.Activity.FiltercolorActivity
+import com.dawnimpulse.permissions.android.Permissions
 import com.example.this_pc.flyhigh.R
-import com.example.this_pc.flyhigh.utils.C
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
 import java.io.File
-import java.io.IOException
 
 /**
  * Created by Saksham on 2018 06 25
@@ -54,31 +47,55 @@ class ModalBottomSheet: BottomSheetDialogFragment() , View.OnClickListener{
     }
 
     override fun onClick(v: View) {
-        Toast.makeText(v.context,"Venom is on the loose",Toast.LENGTH_SHORT).show()
         when (v.getId()) {
             R.id.open_camera_btn -> {
-                val cam_Intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                val file = getFile()
-                cam_Intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file))
-                startActivityForResult(cam_Intent, 1)
+                Permissions.askCameraPermission(activity!!,{no,yes ->
+                    if (yes!=null){
+                        Permissions.askReadExternalStoragePermission(activity!!,{no,yes->
+                            if (yes!=null){
+                                Permissions.askWriteExternalStoragePermission(activity!!,{no,yes->
+                                    if (yes!=null){
+                                        val cam_Intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                                        val file = getFile()
+                                        cam_Intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file))
+                                        activity!!.startActivityForResult(cam_Intent, 1)
+                                        Log.d("hello", "hello")
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
             }
-            R.id.get_img_gallery_btn -> Matisse.from(context)
-                    .choose(MimeType.allOf())
-                    .countable(true)
-                    .maxSelectable(1)
-                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                    .thumbnailScale(0.85f)
-                    .imageEngine(GlideEngine())
-                    .forResult(2)
+            R.id.get_img_gallery_btn -> {
+                Permissions.askReadExternalStoragePermission(activity!!,{no,yes->
+                    if (yes!=null){
+                        Permissions.askWriteExternalStoragePermission(activity!!,{no,yes->
+                            if (yes!=null){
+                                Matisse.from(activity)
+                                        .choose(MimeType.allOf())
+                                        .countable(true)
+                                        .maxSelectable(1)
+                                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                                        .thumbnailScale(0.85f)
+                                        .imageEngine(GlideEngine())
+                                        .forResult(2)
+                            }
+                        })
+                    }
+                })
+            }
             else -> {}
         }
     }
 
-    override fun onActivityResult(requestCode:Int, resultCode:Int, data:Intent) {
+  /*  override fun onActivityResult(requestCode:Int, resultCode:Int, data:Intent) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.d("hello","hello")
+
         if (requestCode == 1 && requestCode == RESULT_OK)
         {
-            val path = "sdcard/bird_app/cam_image.jpg"
+            val path = "/bird_app/cam_image.jpg"
             val d = Drawable.createFromPath(path)
             bitmap = (d as BitmapDrawable).bitmap
             intent = Intent(context, FiltercolorActivity::class.java)
@@ -101,9 +118,9 @@ class ModalBottomSheet: BottomSheetDialogFragment() , View.OnClickListener{
             }
         }
     }
-
+*/
     private fun getFile(): File {
-        val folder = File("sdcard/bird_app")
+        val folder = File("storage/emulated/0/bird_app")
         if (!folder.exists())
         {
             folder.mkdir()
