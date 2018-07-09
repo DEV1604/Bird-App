@@ -41,6 +41,7 @@ public class FilterbirdActivity extends AppCompatActivity {
     ImageView img_to_be_compared;
     ImageView bird_img;
     Intent intent;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class FilterbirdActivity extends AppCompatActivity {
 
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.filter_view);
                     recyclerView.setLayoutManager(new LinearLayoutManager(FilterbirdActivity.this, LinearLayoutManager.HORIZONTAL, false));
-                    recyclerView.setAdapter(new FilterAdapter(details));
+                    recyclerView.setAdapter(new FilterAdapter(details,getSupportFragmentManager()));
 
                 } else {
                     Toast.makeText(FilterbirdActivity.this, "error", Toast.LENGTH_SHORT).show();
@@ -128,7 +129,9 @@ public class FilterbirdActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
