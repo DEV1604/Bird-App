@@ -76,7 +76,7 @@ public class FilterbirdActivity extends AppCompatActivity {
             public void onFailure(Call<FilterList> call_1, Throwable t) {
 
                 Log.d("Error", t.getMessage());
-                Toast.makeText(FilterbirdActivity.this, "something went wrong", Toast.LENGTH_SHORT).show();
+                /*Toast.makeText(FilterbirdActivity.this, "CHECK YOUR NETWORK CONNECTION", Toast.LENGTH_SHORT).show();*/
             }
         });
         /*End of Filters view*/
@@ -102,7 +102,7 @@ public class FilterbirdActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<FilterImageListp> call, Throwable t) {
                 Log.d("Error in image", t.getMessage());
-                Toast.makeText(FilterbirdActivity.this, "something isn't right in image part ", Toast.LENGTH_LONG).show();
+                Toast.makeText(FilterbirdActivity.this, "CHECK YOUR NETWORK CONNECTION", Toast.LENGTH_LONG).show();
             }
         });
 
